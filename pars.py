@@ -141,10 +141,10 @@ def horoscope(client, message):
 
 @app.on_message(filters.command("statistics",prefixes="/") & filters.me & filters.text)
 def id(client, message):
-    a=message.chat
+    last_name=message.chat.last_name
     id=message.chat.id
     name = message.chat.first_name
-    message.reply_text(f"id собеседника: {id}\nИмя собеседника: {name}\n{a}")
+    message.reply_text(f"id собеседника: {id}\nИмя собеседника: {name} {last_name}")
 
 @app.on_message(filters.command("spam",prefixes="/") & filters.me & filters.text)
 def spam(client, message):
