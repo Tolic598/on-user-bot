@@ -150,7 +150,7 @@ def id(client, message):
 def spam(client, message):
     col=message.command[1]
     text=message.command[2]
-    for i in range(col):
+    for i in range(int(col)):
         message.reply_text(f"{text}")
 
 @app.on_message(filters.command("help",prefixes="/") & filters.me & filters.text)
