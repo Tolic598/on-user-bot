@@ -5,7 +5,7 @@ from pyrogram.types import (ReplyKeyboardMarkup,InlineQueryResultArticle, InputT
 from pyrogram.types.messages_and_media import message
 import speech_recognition as sr
 
-app = Client('acc',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
+app = Client('goroscop',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
 
 HEADERS={
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
