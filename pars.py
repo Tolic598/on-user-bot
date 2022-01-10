@@ -3,8 +3,9 @@ from bs4 import BeautifulSoup as BS
 from pyrogram import Client, filters
 from pyrogram.types import (ReplyKeyboardMarkup,InlineQueryResultArticle, InputTextMessageContent,InlineKeyboardMarkup, InlineKeyboardButton)
 from pyrogram.types.messages_and_media import message
+import speech_recognition as sr
 
-app = Client('goroscop',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
+app = Client('acc',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
 
 HEADERS={
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
@@ -14,6 +15,9 @@ HEADERS={
 @app.on_message(filters.command("horoscope",prefixes="/") & filters.me & filters.text)
 def horoscope(client, message):
     id=message.from_user.id
+    client.delete_messages(
+    chat_id=id,
+    message_ids=message.message_id)
     message.text=message.command[1]
 
     if message.text=="овен" or message.text=="Овен":
@@ -141,17 +145,25 @@ def horoscope(client, message):
 
 @app.on_message(filters.command("statistics",prefixes="/") & filters.me & filters.text)
 def id(client, message):
-    last_name=message.chat.last_name
     id=message.chat.id
     name = message.chat.first_name
-    message.reply_text(f"id собеседника: {id}\nИмя собеседника: {name} {last_name}")
+    scam=message.chat.is_scam
+    face=message.chat.is_fake
+    support=message.chat.is_support
+    client.delete_messages(
+    chat_id=id,
+    message_ids=message.message_id)
+    message.reply_text(f"id собеседника: {id}\nИмя собеседника: {name}\nСкам: {scam}\nФейк: {face}\nПоддержка телеграм: {support}")
 
 @app.on_message(filters.command("spam",prefixes="/") & filters.me & filters.text)
 def spam(client, message):
+    id=message.chat.id
+    client.delete_messages(
+    chat_id=id,
+    message_ids=message.message_id)
     col=message.command[1]
     text1=message.command[2]
     a=len(message.command)
-    print(a)
     if a==3:
         for i in range(int(col)):
             message.reply_text(f"{text1}")
@@ -221,8 +233,18 @@ def spam(client, message):
         for i in range(int(col)):
             message.reply_text(f"{text1} {text2} {text3} {text4} {text5} {text6} {text7} {text8} {text9} {text10}")
 
+@app.on_message(filters.command("q",prefixes="/") & filters.me & filters.text)
+def q(client, message):
+    app.get_dialogs()
+    #print(a)
+
 @app.on_message(filters.command("help",prefixes="/") & filters.me & filters.text)
 def help(client, message):
+    id=message.chat.id
     message.reply_text(f"🧐Гороскоп: <code>/horoscope текст</code>\n💼Статистика пользователя: <code>/statistics</code>\n👨‍💻Спам пользователю: <code>/spam количество текст</code>")
+    client.delete_messages(
+    chat_id=id,
+    message_ids=message.message_id
+    )
 
 app.run()
