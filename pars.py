@@ -4,6 +4,9 @@ from pyrogram import Client, filters
 from pyrogram.types import (ReplyKeyboardMarkup,InlineQueryResultArticle, InputTextMessageContent,InlineKeyboardMarkup, InlineKeyboardButton)
 from pyrogram.types.messages_and_media import message
 import speech_recognition as sr
+from time import sleep
+from pyrogram.types import Message
+from pyrogram.raw import functions
 
 app = Client('goroscop',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
 
@@ -164,23 +167,28 @@ def spam(client, message):
     col=message.command[1]
     text1=message.command[2]
     a=len(message.command)
+    print(a)
     if a==3:
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1}")
     elif a==4:
         text2=message.command[3]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2}")
     elif a==5:
         text2=message.command[3]
         text3=message.command[4]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3}")
     elif a==6:
         text2=message.command[3]
         text3=message.command[4]
         text4=message.command[5]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3} {text4}")
     elif a==7:
         text2=message.command[3]
@@ -189,6 +197,7 @@ def spam(client, message):
         text5=message.command[6]
         text6=message.command[7]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3} {text4} {text5} {text6}")
     elif a==8:
         text2=message.command[3]
@@ -198,6 +207,7 @@ def spam(client, message):
         text6=message.command[7]
         text7=message.command[8]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3} {text4} {text5} {text6} {text7}")
     elif a==9:
         text2=message.command[3]
@@ -208,6 +218,7 @@ def spam(client, message):
         text7=message.command[8]
         text8=message.command[9]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3} {text4} {text5} {text6} {text7} {text8}")
     elif a==10:
         text2=message.command[3]
@@ -219,6 +230,7 @@ def spam(client, message):
         text8=message.command[9]
         text9=message.command[10]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3} {text4} {text5} {text6} {text7} {text8} {text9}")
     elif a==11:
         text2=message.command[3]
@@ -231,20 +243,63 @@ def spam(client, message):
         text9=message.command[10]
         text10=message.command[11]
         for i in range(int(col)):
+            sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3} {text4} {text5} {text6} {text7} {text8} {text9} {text10}")
 
-@app.on_message(filters.command("q",prefixes="/") & filters.me & filters.text)
-def q(client, message):
-    app.get_dialogs()
-    #print(a)
+@app.on_message(filters.command("text",prefixes="/") & filters.me & filters.text)
+def text(client, message):
+    try:
+        if not message.reply_to_message:
+                message.edit("<b>Нету реплай!</b>")
+        else:
+                if message.reply_to_message.voice:
+                    message.edit("<b>Подождите....</b>")
+                    client.send_message("@voicybot", "/start")
+                    sleep(1)
+                    message.reply_to_message.forward("@voicybot")
+                    sleep(3)
+                    messages = client.get_history("@voicybot")
+                    message.edit(
+                        f'<b>Текст:</b>\n{messages[0].text.replace("При поддержке Бородач Инвест"," ")}'
+                    )
+                    client.send(
+                        functions.messages.DeleteHistory(
+                            peer=client.resolve_peer(259276793),
+                            max_id=0,
+                            just_clear=True,
+                        )
+                    )
+                else:
+                    message.edit("<b>Это не голосовое сообщение!</b>")
+    except Exception as e:
+        message.edit(f"<b>Упсс:</b> <code>{e}</code")
+
+@app.on_message(filters.command("weather",prefixes="/") & filters.me & filters.text)
+def weather(client, message):
+    id=message.from_user.id
+    client.delete_messages(
+    chat_id=id,
+    message_ids=message.message_id)
+    message.text=message.command[1]
+
+    weather=requests.get(f'https://sinoptik.ua/погода-{message.text}',headers=HEADERS)
+    weather.raise_for_status()
+    html=BS(weather.text,"html.parser")
+
+    dayn=html.find('p',class_="day-link").get_text(strip=True)
+    day=html.find('p',class_="date dateFree").get_text(strip=True)
+    month=html.find('p',class_="month").get_text(strip=True)
+    minus=html.find('div',class_="min").get_text(strip=True)
+    plus=html.find('div',class_="max").get_text(strip=True)
+    message.reply_text(f"День недели: {dayn}\nДень и месяц: {day} {month}\n{minus}\n{plus}")
+
 
 @app.on_message(filters.command("help",prefixes="/") & filters.me & filters.text)
 def help(client, message):
     id=message.chat.id
-    message.reply_text(f"🧐Гороскоп: <code>/horoscope текст</code>\n💼Статистика пользователя: <code>/statistics</code>\n👨‍💻Спам пользователю: <code>/spam количество текст</code>")
+    message.reply_text(f"🧐Гороскоп: <code>/horoscope текст</code>\n☂Погода: <code>/weather город</code>\n💼Статистика пользователя: <code>/statistics</code>\n🗣Голосовое текстом: <code>/text</code>\n👨‍💻Спам пользователю: <code>/spam количество текст</code>")
     client.delete_messages(
     chat_id=id,
-    message_ids=message.message_id
-    )
+    message_ids=message.message_id)
 
 app.run()
