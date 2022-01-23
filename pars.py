@@ -625,11 +625,11 @@ def help(client, message):
     try:
         logging.info("CLIP: Список комманд")
         id=message.chat.id
-        client.delete_messages(
-        chat_id=id,
-        message_ids=message.message_id)
+        #client.delete_messages(
+        #chat_id=id,
+        #message_ids=message.message_id)
         #message.edit("🕐 Загрузка меню помощи. Пожалуйста подождите...")
-        message.reply_text=(
+        message.edit=(
         f"🧐Гороскоп: <code>/horoscope текст</code>\n☂Погода: <code>/weather город</code>\nРепутация: <code>/rep число</code>\nУдалить смс: <code>/del</code>\nПрогресс бар: <code>/progressbar число</code>\nМем из картинки: <code>/dem слово</code>\n💼Статистика пользователя: <code>/statistics</code>\n✍Текст печатаеться по букве: <code>/print</code>\n🗣Голосовое текстом: <code>/text</code>\n👨‍💻Спам пользователю: <code>/spam количество текст</code>")
     except Exception as error:
         message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
