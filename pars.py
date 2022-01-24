@@ -620,7 +620,7 @@ def id(client: Client, message: Message):
         message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
         app.send_document("Logiers_bot", "clip.log")
 
-@app.on_message(filters.command("help",prefixes="/") & filters.me & filters.text)
+@app.on_message(filters.command("help",prefixes="/") & filters.text)
 def help(client, message):
     try:
         logging.info("CLIP: Список комманд")
