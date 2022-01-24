@@ -526,7 +526,7 @@ def chance(client: Client, message: Message):
         app.send_document("Logiers_bot", "clip.log")
 
 # Демотиватор
-@app.on_message(filters.command("dem", prefixes="/"))
+@app.on_message(filters.command("dem", prefixes="/") & filters.text)
 def demotivator(client: Client, message: Message):
     message.edit("⏳ | Создаю демотиватор, это может занять некоторое время...")
     try:
