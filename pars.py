@@ -11,7 +11,10 @@ from pyrogram.types import ChatPermissions
 from pyrogram.errors import FloodWait
 from pyrogram.types import InputPhoneContact
 import random
+from time import perf_counter
 import subprocess
+from pyrogram.handlers import MessageHandler
+import asyncio
 
 app = Client('goroscop',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
 
@@ -471,7 +474,7 @@ def progressbar(client, message):
 
 # Репутация
 @app.on_message(filters.text & filters.incoming & filters.regex("^\-$") & filters.reply)
-async def repMinus(client: Client, message: Message):
+def repMinus(client: Client, message: Message):
     try:
         if message.reply_to_message.from_user.is_self:
             with open("rep.txt", "r+") as f:
@@ -486,7 +489,7 @@ async def repMinus(client: Client, message: Message):
                 f.write(repo)
                 f.close()
                 text = "❎ Осуждение оказано (-1)\n🌐 Текущая репутация: " + str(repo) + ""
-                await message.reply_text(text)
+                message.reply_text(text)
             logging.info("CLIP: Понижение репутации")
     except:
         pass
@@ -526,7 +529,7 @@ def chance(client: Client, message: Message):
         app.send_document("Logiers_bot", "clip.log")
 
 # Демотиватор
-@app.on_message(filters.command("dem", prefixes="/") & filters.text)
+@app.on_message(filters.command("dem", prefixes="/") & filters.me)
 def demotivator(client: Client, message: Message):
     message.edit("⏳ | Создаю демотиватор, это может занять некоторое время...")
     try:
@@ -606,33 +609,227 @@ def delete_messages(client: Client, message: Message):
 # статистика
 @app.on_message(filters.command("statistics", prefixes="/") & filters.me)
 def id(client: Client, message: Message):
-    timesnow = datetime.datetime.now().strftime('%d.%m.%Y\nВремя %H:%M:%S')
     try:
         logging.info("CLIP: Получение ID\n----------------------------------------------------------------------------")
 
         if message.reply_to_message is None:
-            message.edit(f"👤 | Айди Чата: {message.chat.id}\nИмя собеседника: {message.chat.first_name}\nМошеник: {message.chat.is_scam}\nФейк: {message.chat.is_fake}\nПоддержка телеграм: {message.chat.is_support}\nТекущая дата: {timesnow}")
+            message.edit(f"👤 | Айди Чата: {message.chat.id}\nИмя собеседника: {message.chat.first_name}\nМошеник: {message.chat.is_scam}\nФейк: {message.chat.is_fake}\nПоддержка телеграм: {message.chat.is_support}\n")
         else:
-            id = f"👤 | Айди пользователя: {message.reply_to_message.from_user.id}\n📢 | Айди чата: {message.chat.id}\nИмя собеседника: {message.reply_to_message.first_name}\nМошеник: {message.reply_to_message.is_scam}\nФейк: {message.reply_to_message.is_fake}\nПоддержка телеграм: {message.reply_to_message.is_support}\nТекущая дата: {timesnow}"
+            id = f"👤 | Айди пользователя: {message.reply_to_message.from_user.id}\n📢 | Айди чата: {message.chat.id}\nИмя собеседника: {message.reply_to_message.first_name}\nМошеник: {message.reply_to_message.is_scam}\nФейк: {message.reply_to_message.is_fake}\nПоддержка телеграм: {message.reply_to_message.is_support}\n"
             message.edit(id)
 
     except Exception as error:
         message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
         app.send_document("Logiers_bot", "clip.log")
 
-@app.on_message(filters.command("help",prefixes="/") & filters.text)
-def help(client, message):
+#Вечный онлайн
+@app.on_message(filters.command("online", prefixes="/") & filters.me)
+def online_now(client, message):
     try:
-        logging.info("CLIP: Список комманд")
-        id=message.chat.id
-        #client.delete_messages(
-        #chat_id=id,
-        #message_ids=message.message_id)
-        #message.edit("🕐 Загрузка меню помощи. Пожалуйста подождите...")
-        message.reply_text(
-        f"🧐Гороскоп: <code>/horoscope текст</code>\n☂Погода: <code>/weather город</code>\nРепутация: <code>/rep число</code>\nУдалить смс: <code>/del</code>\nПрогресс бар: <code>/progressbar число</code>\nМем из картинки: <code>/dem слово</code>\n💼Статистика пользователя: <code>/statistics</code>\n✍Текст печатаеться по букве: <code>/print</code>\n🗣Голосовое текстом: <code>/text</code>\n👨‍💻Спам пользователю: <code>/spam количество текст</code>")
+        logging.info("CLIP: вечный онлайн\n----------------------------------------------------------------------------")
+        sle=message.command[1]
+        message.edit("Автоонлайн активирован")
+        while True:
+            iii = client.send_message("me", "bruh")
+            client.delete_messages("me", iii.message_id)
+            sleep(sle)
+
     except Exception as error:
         message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
         app.send_document("Logiers_bot", "clip.log")
+
+#Вечный оффлайн
+def afk_handler(client, message):
+    try:
+        global start, end
+        end = datetime.datetime.now().replace(microsecond=0)
+        afk_time = end - start
+
+        if message.from_user.is_bot is False:
+            message.reply_text(
+                f"❕ Этот пользователь AFK.\n" f"<b>💬 Причина:</b> {reason}.\n" f"<b>⏳ Продолжительность:</b> {afk_time}")
+    except NameError:
+        pass
+
+@app.on_message(filters.command("afk", prefixes="/") & filters.me)
+def afk(client, message):
+    try:
+        logging.info("CLIP: AFK on\n----------------------------------------------------------------------------")
+        global start, end, handler, reason
+        start = datetime.datetime.now().replace(microsecond=0)
+        handler = client.add_handler(
+            MessageHandler(afk_handler,
+                           (filters.private & ~filters.me | filters.group & filters.mentioned & ~filters.me)))
+        if len(message.text.split()) >= 2:
+            reason = message.text.split(" ", maxsplit=1)[1]
+        else:
+            reason = message.command[1]
+        message.edit(f"❕ Ты ущёл <b>AFK</b>.\n<b>💬 Причина:</b> {reason}.\n")
+    except Exception as f:
+        message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
+        app.send_document("Logiers_bot", "clip.log")
+
+# No AFK
+@app.on_message(filters.command("unafk", prefixes="/") & filters.me)
+def unafk(client, message):
+    try:
+        logging.info("CLIP: AFK офф\n----------------------------------------------------------------------------")
+        global start, end
+        end = datetime.datetime.now().replace(microsecond=0)
+        afk_time = end - start
+        message.edit(
+            f"❕ Этот пользователь больше не <b>AFK.</b>\n⏳ Продолжительность <b>AFK:</b> {afk_time}"
+        )
+        client.remove_handler(*handler)
+    except Exception as error:
+        message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
+        app.send_document("Logiers_bot", "clip.log")
+
+#Поиск музыки по название
+@app.on_message(filters.command("m", prefixes="/") & filters.me)
+def send_music(client, message):
+    message.edit("Поиск...")
+    song_name = ""
+    if len(message.command) > 1:
+        song_name = " ".join(message.command[1:])
+    elif message.reply_to_message and len(message.command) == 1:
+        song_name = (
+                message.reply_to_message.text or message.reply_to_message.caption
+        )
+    elif not message.reply_to_message and len(message.command) == 1:
+        message.edit("Введите название музыки:")
+        sleep(2)
+        message.delete()
+        return
+
+    song_results = client.get_inline_bot_results("deezermusicbot", song_name)
+
+    try:
+        # отправить в сохраненные сообщения, потому что hide_via иногда не работает
+        saved = client.send_inline_bot_result(
+            chat_id="me",
+            query_id=song_results.query_id,
+            result_id=song_results.results[0].id,
+            hide_via=True,
+        )
+
+        # пересылать как новое сообщение из сохраненных сообщений
+        saved = client.get_messages("me", int(saved.updates[1].message.id))
+        reply_to = (
+            message.reply_to_message.message_id
+            if message.reply_to_message
+            else None
+        )
+        client.send_audio(
+            chat_id=message.chat.id,
+            audio=str(saved.audio.file_id),
+            reply_to_message_id=reply_to,
+        )
+
+        # удалить сообщение из сохраненных сообщений
+        client.delete_messages("me", saved.message_id)
+    except TimeoutError:
+        message.edit("Это не сработало")
+        sleep(2)
+    message.delete()
+
+#Текст лестницей
+@app.on_message(filters.command("ladder",prefixes="/") & filters.me)
+def ladder(client, message):
+    try:
+        logging.info("CLIP: Текст лестницей\n----------------------------------------------------------------------------")
+
+        orig_text = message.text.split("/ladder ", maxsplit=1)[1]
+        text = orig_text
+        output = []
+        for i in range(len(text) + 1):
+            output.append(text[:i])
+        ot = "\n".join(output)
+        message.edit(ot)
+
+    except Exception as error:
+        message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
+        app.send_document("Logiers_bot", "clip.log")
+
+#Текст ссылкой
+@app.on_message(filters.command("link",prefixes="/") & filters.me)
+def link(client, message):
+    try:
+        logging.info("CLIP: Текст ссылкой\n----------------------------------------------------------------------------")
+
+        link = message.command[1]
+        text = " ".join(message.command[2:])
+        message.delete()
+        client.send_message(message.chat.id, f'<a href="{link}">{text}</a>', disable_web_page_preview=True)
+        
+    except Exception as error:
+        message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
+        app.send_document("Logiers_bot", "clip.log")
+
+#Пинг
+@app.on_message(filters.command('ping',prefixes="/") & filters.me)
+def ping(client, message):
+    start1 = perf_counter()
+    message.edit("Тест Ping📈..")
+    end1 = perf_counter()
+
+    start2 = perf_counter()
+    message.edit("Тест Ping📉..")
+    end2 = perf_counter()
+
+    start3 = perf_counter()
+    message.edit("Тест Ping📈...")
+    end3 = perf_counter()
+
+    start4 = perf_counter()
+    message.edit("Тест Ping📉...")
+    end4 = perf_counter()
+
+    pinges = ((end1 + end2 + end3 + end4) / 4) - ((start1 + start2 + start3 + start4) / 4)
+    ping = pinges * 1000
+
+    if 0 <= ping <= 199:
+      connect = "🟢 Стабильный"
+    if 199 <= ping <= 400:
+      connect = "🟠 Хорошо"
+    if 400 <= ping <= 600:
+      connect = "🔴 Не стабильный"
+    if 600 <= ping:
+      connect = "⚠ Проверьте подключение к сети"
+    message.edit(f"<b>⏳ Ping\n📶</b> {round(ping)} ms\n{connect}")
+
+#Создание цытаты
+@app.on_message(filters.command("q",prefixes="/") & filters.me)
+def quotly(client, message):
+    idstick = 0
+    if not message.reply_to_message:
+        message.edit("Ответить на сообщение")
+        return
+
+    message.edit("Создавайте цитаты... подождите...")
+    app.unblock_user("QuotLyBot")
+    sleep(1)
+    message.reply_to_message.forward("QuotLyBot")
+    sleep(4)
+    iii = app.get_history("QuotLyBot", limit=1)
+    idstick = iii[0].sticker.file_id
+    app.send_sticker(message.chat.id, idstick)
+
+
+
+#Список комманд
+@app.on_message(filters.command("help",prefixes="/") & filters.me & filters.text)
+def help(client, message):
+    try:
+        logging.info("CLIP: Список комманд\n----------------------------------------------------------------------------")
+        id=message.chat.id
+        message.edit("🕐 Загрузка меню помощи. Пожалуйста подождите...")
+        message.edit(
+            f"🔍Гороскоп: <code>/horoscope текст</code>\n☂Погода: <code>/weather город</code>\n🎧Поиск музыки по название: <code>/m название</code>\n🤟Репутация: <code>/rep число</code>\n🪜Текст лестницей: <code>/ladder текст</code>\n🔗Текст ссылкой: <code>/link ссылка текст</code>\n⏳Пинг: <code>/ping</code>\n💯Шанс: <code>/chanse</code>\n📝Создание цытаты: <code>/q</code>\n🔵Вечный онлайн: <code>/online время</code>\n🔴Вечный оффлайн: <code>/afk причина</code>\n👨‍🏫Прогресс бар: <code>/progressbar число</code>\n🤪Мем из картинки: <code>/dem слово</code>\n💼Статистика пользователя: <code>/statistics</code>\n✍Текст печатаеться по букве: <code>/print</code>\n🗣Голосовое текстом: <code>/text</code>\n👨‍💻Спам пользователю: <code>/spam количество текст</code>")
+
+    except Exception as error:
+        message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
+        app.send_document("Logiers_bot", "clip.log")
+
 
 app.run()
