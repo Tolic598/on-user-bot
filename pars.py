@@ -843,9 +843,6 @@ app.run()
 from time import perf_counter
 import subprocess
 from pyrogram.handlers import MessageHandler
-import asyncio
-
-app = Client('from tkinter import N
 import requests
 from bs4 import BeautifulSoup as BS
 from pyrogram import Client, filters
