@@ -10,7 +10,6 @@ from pyrogram.raw import functions
 from pyrogram.types import ChatPermissions
 from pyrogram.errors import FloodWait
 from pyrogram.types import InputPhoneContact
-import randomfrom tkinter import N
 import requests
 from bs4 import BeautifulSoup as BS
 from pyrogram import Client, filters
