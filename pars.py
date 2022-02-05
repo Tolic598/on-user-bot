@@ -837,3 +837,5 @@ def help(client, message):
     except Exception as error:
         message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
         app.send_document("Logiers_bot", "clip.log")
+
+app.run()
