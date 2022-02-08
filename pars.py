@@ -10,18 +10,6 @@ from pyrogram.raw import functions
 from pyrogram.types import ChatPermissions
 from pyrogram.errors import FloodWait
 from pyrogram.types import InputPhoneContact
-import requests
-from bs4 import BeautifulSoup as BS
-from pyrogram import Client, filters
-from pyrogram.types import (ReplyKeyboardMarkup,InlineQueryResultArticle, InputTextMessageContent,InlineKeyboardMarkup, InlineKeyboardButton)
-from pyrogram.types.messages_and_media import message
-import speech_recognition as sr
-from time import sleep
-from pyrogram.types import Message
-from pyrogram.raw import functions
-from pyrogram.types import ChatPermissions
-from pyrogram.errors import FloodWait
-from pyrogram.types import InputPhoneContact
 import random
 from time import perf_counter
 import subprocess
@@ -837,5 +825,6 @@ def help(client, message):
     except Exception as error:
         message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
         app.send_document("Logiers_bot", "clip.log")
+
 
 app.run()
