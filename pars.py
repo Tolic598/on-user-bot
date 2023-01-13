@@ -20,7 +20,7 @@ import wget
 from alive_progress import alive_bar
 
 
-app = Client('tolic',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
+app = Client('tolic18',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
 
 HEADERS={
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
