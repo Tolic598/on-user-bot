@@ -4,4 +4,3 @@ pyrogram
 SpeechRecognition
 TgCrypto
 subprocess.run
-alive-progress
