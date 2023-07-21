@@ -5,8 +5,4 @@ SpeechRecognition
 subprocess.run
 alive-progress
 wget
-logging42
-wikipedia
-db0mb3r
-configparser
-telegraph
+
