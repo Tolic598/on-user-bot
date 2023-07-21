@@ -3,5 +3,10 @@ bs4
 pyrogram
 SpeechRecognition
 TgCrypto
+subprocess.run
+alive-progress
+wget
+logging42
+wikipedia
 
 
