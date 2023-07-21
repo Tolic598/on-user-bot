@@ -18,9 +18,9 @@ import asyncio
 from pyrogram.raw import functions,types
 import wget
 from alive_progress import alive_bar
+import datetime
 
-
-app = Client('tolic18',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
+app = Client('acc',api_id='7673043',api_hash='60b167e3ea495003048e13129fc1287a')
 
 HEADERS={
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
@@ -177,7 +177,6 @@ def spam(client, message):
     col=message.command[1]
     text1=message.command[2]
     a=len(message.command)
-    print(a)
     if a==3:
         for i in range(int(col)):
             sleep(0.5)
@@ -256,33 +255,33 @@ def spam(client, message):
             sleep(0.5)
             message.reply_text(f"{text1} {text2} {text3} {text4} {text5} {text6} {text7} {text8} {text9} {text10}")
 
-@app.on_message(filters.command("text",prefixes="/") & filters.me & filters.text)
-def text(client, message):
-    try:
-        if not message.reply_to_message:
-                message.edit("<b>Нету реплай!</b>")
-        else:
-                if message.reply_to_message.voice:
-                    message.edit("<b>Подождите....</b>")
-                    client.send_message("@voicybot", "/start")
-                    sleep(1)
-                    message.reply_to_message.forward("@voicybot")
-                    sleep(3)
-                    messages = client.get_history("@voicybot")
-                    message.edit(
-                        f'<b>Текст:</b>\n{messages[0].text.replace("При поддержке Бородач Инвест"," ")}'
-                    )
-                    client.send(
-                        functions.messages.DeleteHistory(
-                            peer=client.resolve_peer(259276793),
-                            max_id=0,
-                            just_clear=True,
-                        )
-                    )
-                else:
-                    message.edit("<b>Это не голосовое сообщение!</b>")
-    except Exception as e:
-        message.edit(f"<b>Упсс:</b> <code>{e}</code")
+# @app.on_message(filters.command("text",prefixes="/") & filters.me & filters.text)
+# def text(client, message):
+#     try:
+#         if not message.reply_to_message:
+#                 message.edit("<b>Нету реплай!</b>")
+#         else:
+#                 if message.reply_to_message.voice:
+#                     message.edit("<b>Подождите....</b>")
+#                     client.send_message("@voicybot", "/start")
+#                     sleep(1)
+#                     message.reply_to_message.forward("@voicybot")
+#                     sleep(3)
+#                     messages = client.get_history("@voicybot")
+#                     message.edit(
+#                         f'<b>Текст:</b>\n{messages[0].text.replace("При поддержке Бородач Инвест"," ")}'
+#                     )
+#                     client.send(
+#                         functions.messages.DeleteHistory(
+#                             peer=client.resolve_peer(259276793),
+#                             max_id=0,
+#                             just_clear=True,
+#                         )
+#                     )
+#                 else:
+#                     message.edit("<b>Это не голосовое сообщение!</b>")
+#     except Exception as e:
+#         message.edit(f"<b>Упсс:</b> <code>{e}</code")
 
 @app.on_message(filters.command("weather",prefixes="/") & filters.me & filters.text)
 def weather(client, message):
@@ -293,6 +292,7 @@ def weather(client, message):
         message.edit("🕑 Просматриваю погоду в вашей стране")
         r = requests.get(f"https://wttr.in/{city}?m?M?0?q?T&lang=ru")
         message.edit(f"🗺 Ваш город : {r.text}")
+        requests.onreadystatechange = function() 
     except FloodWait as e:
         with open("floodwait.txt", "r+") as f:
             opisanie = f.read()
@@ -300,12 +300,6 @@ def weather(client, message):
             sleep(e.x)
             app.update_profile(last_name=f"{opisanie}")
             f.close()
-    except Exception as erryr:
-        logging.error(erryr)
-        message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
-        app.send_document("Logiers_bot", "clip.log")
-
-
 
 @app.on_message(filters.command("print", prefixes="/") & filters.me)
 def type(_, msg):
@@ -354,49 +348,6 @@ def progressbar(client, message):
         logging.error(erryr)
         message.edit(f"⚠️ | Что-то пошло не так...\n💬 | Просмотреть ошибку можно здесь: @Logiers_bot")
         app.send_document("Logiers_bot", "clip.log")
-
-# Репутация
-@app.on_message(filters.text & filters.incoming & filters.regex("^\-$") & filters.reply)
-def repMinus(client: Client, message: Message):
-    try:
-        if message.reply_to_message.from_user.is_self:
-            with open("rep.txt", "r+") as f:
-                data1 = f.read()
-                dat = int(data1)
-                num = 1
-                rep = dat - num
-                repo = str(rep)
-                f.close()
-            with open("rep.txt", "w+") as f:
-                repo = str(rep)
-                f.write(repo)
-                f.close()
-                text = "❎ Осуждение оказано (-1)\n🌐 Текущая репутация: " + str(repo) + ""
-                message.reply_text(text)
-            logging.info("CLIP: Понижение репутации")
-    except:
-        pass
-
-@app.on_message(filters.text & filters.incoming & filters.regex("^\+$") & filters.reply)
-def repPlus(client: Client, message: Message):
-    try:
-        if message.reply_to_message.from_user.is_self:
-            with open("rep.txt", "r+") as f:
-                data = f.read()
-                data = int(data)
-                num = 1
-                rep = data + num
-                repo = str(rep)
-                f.close()
-            with open("rep.txt", "w+") as f:
-                repo = str(rep)
-                f.write(repo)
-                f.close()
-                text = "✅ Уважение оказано (+1)\n🌐 Текущая репутация: " + str(repo)
-                message.reply_text(text)
-            logging.info("CLIP: Повышение репутации")
-    except:
-        pass
 
 # Шансы
 @app.on_message(filters.command("chance", prefixes="/") & filters.me)
@@ -569,7 +520,7 @@ def send_music(client, message):
         message.delete()
         return
 
-    song_results = client.get_inline_bot_results("deezermusicbot", song_name)
+    song_results = client.get_inline_bot_results("smusic2bot", song_name)
 
     try:
         # отправить в сохраненные сообщения, потому что hide_via иногда не работает
@@ -690,6 +641,7 @@ def quotly(client, message):
 # def quotly(client, message):
 #     message.edit(f"Message\n├─Type: Message\n├─message_id: {message.message_id}\n├─from_user: \n│   ├─Type: User\n│   ├─id: {message.from_user.id}\n│   ├─is_self: ✅{message.from_user.is_self}❌\n│   ├─is_contact: ✅{message.from_user.is_contact}❌\n│   ├─is_mutual_contact: ✅{message.from_user.is_mutual_contact}❌\n│   ├─is_deleted: ✅{message.from_user.is_deleted}❌\n│   ├─is_bot: ✅{message.from_user.is_bot}❌\n│   ├─is_verified: ✅{message.from_user.is_verified}❌\n│   ├─is_restricted: ✅{message.from_user.is_restricted}❌\n│   ├─is_scam: ✅{message.from_user.is_scam}❌\n│   ├─is_fake: ✅{message.from_user.is_fake}❌\n│   ├─is_support: ✅{message.from_user.is_support}❌\n│   ├─first_name: {message.from_user.first_name}\n│   ├─status: {message.from_user.status}\n│   ├─username: {message.from_user.username}\n│   ├─dc_id: {message.from_user.dc_id}\n│   ╰─photo: \n│       ├─Type: ChatPhoto\n│       ├─small_file_id: {message.from_user.photo.small_file_id}\n│       ├─small_photo_unique_id: {message.from_user.photo.small_photo_unique_id}\n│       ├─big_file_id: {message.from_user.photo.big_file_id}\n│       ╰─big_photo_unique_id: {message.from_user.photo.big_photo_unique_id}\n├─date: {message.date}\n├─chat: \n│   ├─Type: Chat\n│   ├─id: {message.chat.id}\n│   ├─type: {message.chat.type}\n│   ├─is_verified: ✅{message.chat.is_verified}❌\n│   ├─is_restricted: ✅{message.chat.is_restricted}❌\n│   ├─is_creator: ✅{message.chat.is_creator}❌\n│   ├─is_scam: ✅{message.chat.is_scam}❌\n│   ├─is_fake: ✅{message.chat.is_fake}❌\n│   ├─title: {message.chat.title}\n│   ├─username: {message.chat.username}\n│   ├─photo: \n│   │   ├─Type: ChatPhoto\n│   │   ├─small_file_id: {message.chat.photo.small_file_id}\n│   │   ├─small_photo_unique_id: {message.chat.photo.small_photo_unique_id}\n│   │   ├─big_file_id: {message.chat.photo.big_file_id}\n│   │   ╰─big_photo_unique_id: {message.chat.photo.big_photo_unique_id}\n│   ├─dc_id: {message.chat.dc_id}\n│   ├─has_protected_content: {message.chat.has_protected_content}❌\n│   ╰─permissions: \n│       ├─Type: ChatPermissions\n:")
 #     #│       ├─can_send_messages: ✅{message.chat.permissions.can_send_messages}❌\n│       ├─can_send_media_messages: ✅{message.chat.permissions.can_send_media_messages}❌\n│       ├─can_send_other_messages: ✅{message.chat.permissions.can_send_other_messages}❌\n│       ├─can_send_polls: ✅{message.chat.permissions.can_send_polls}❌\n│       ├─can_add_web_page_previews: ✅{message.chat.permissions.can_add_web_page_previews}❌\n│       ├─can_change_info: ✅{message.chat.permissions.can_change_info}❌\n│       ├─can_invite_users: ✅{message.chat.permissions.can_invite_users}❌\n│       ╰─can_pin_messages: ✅{message.chat.permissions.can_pin_messages}❌\n├─mentioned: ✅{message.mentioned}❌\n├─scheduled: ✅{message.scheduled}❌\n├─from_scheduled: ✅{message.from_scheduled}❌\n├─has_protected_content: ✅{message.has_protected_content}❌\n├─text: {message.text}\n├─entities: [{'_': 'MessageEntity', 'type': 'url', 'offset': 34, 'length': 12}]\n╰─outgoing: ✅{message.outgoing}❌\n")
+
 
 
 #Список комманд
