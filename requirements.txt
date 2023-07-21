@@ -1,8 +1,4 @@
 requests
 bs4
 pyrogram
-SpeechRecognition
-subprocess.run
-alive-progress
-wget
 
