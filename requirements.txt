@@ -11,7 +11,6 @@ datetime
 wikipedia
 gtts
 colorama
-youtube_dl
 db0mb3r
 configparser
 telegraph
