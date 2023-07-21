@@ -1,16 +1,4 @@
 requests
 bs4
 pyrogram
-datetime
-SpeechRecognition
-subprocess.run
-logging42
-alive_progress
-wget
-datetime
-wikipedia
 
-colorama
-db0mb3r
-configparser
-telegraph
