@@ -1,4 +1,7 @@
 requests
 bs4
 pyrogram
+SpeechRecognition
+TgCrypto
+
 
