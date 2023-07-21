@@ -9,7 +9,7 @@ alive_progress
 wget
 datetime
 wikipedia
-gtts
+
 colorama
 db0mb3r
 configparser
