@@ -10,4 +10,7 @@ wikipedia
 db0mb3r
 configparser
 telegraph
-
+--upgrade setuptools
+--upgrade pip
+cache purge
+pyaes
