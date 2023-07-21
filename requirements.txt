@@ -3,7 +3,11 @@ bs4
 pyrogram
 SpeechRecognition
 subprocess.run
-alive_progress
+alive-progress
 wget
-
+logging42
+wikipedia
+db0mb3r
+configparser
+telegraph
 
