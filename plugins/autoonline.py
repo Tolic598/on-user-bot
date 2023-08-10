@@ -9,7 +9,7 @@ prefix = my_prefix()
 
 @Client.on_message(filters.command("online", prefixes=prefix) & filters.me)
 async def online_now(client, message):
-    await message.edit("Автоонлайн активирован")
+    await message.edit("AutoOnline activated")
     while True:
         iii = await client.send_message("me", "bruh")
         await client.delete_messages("me", iii.id)
@@ -18,7 +18,7 @@ async def online_now(client, message):
 
 @Client.on_message(filters.command("offline", prefixes=prefix) & filters.me)
 async def offline_now(client, message):
-    await message.edit("AutoOnline деактивирован\nПерезапустить...")
+    await message.edit("AutoOnline deactivated\nRestart...")
     await restart(message, restart_type="restart")
 
 

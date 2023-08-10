@@ -4,18 +4,16 @@ import os
 
 
 def prestart(api_id, api_hash, device_mod):
-    app = Client("my_account", api_id=api_id, api_hash=api_hash, device_model=device_mod)
+    app = Client("acc", api_id=api_id, api_hash=api_hash, device_model=device_mod)
     with app:
         if len(sys.argv) == 4:
             restart_type = sys.argv[3]
             if restart_type == "1":
-                text = "<code>Процесс обновления завершен!</code>"
+                text = "<code>РџСЂРѕС†РµСЃСЃ РѕР±РЅРѕРІР»РµРЅРёСЏ Р·Р°РІРµСЂС€РµРЅ!</code>"
             else:
-                text = "**Юзербот успешно перезапущен**"
+                text = "**Р®Р·РµСЂР±РѕС‚ СѓСЃРїРµС€РЅРѕ РїРµСЂРµР·Р°РїСѓС‰РµРЅ**"
             try:
                 app.send_message(int(sys.argv[1]), text)
             except Exception as f:
-                app.send_message("me", f"Получил ошибку: {f}\n\n" + text)
+                app.send_message("me", f"Got error: {f}\n\n" + text)
                 pass
-                
-        app.join_chat("foxteam0")

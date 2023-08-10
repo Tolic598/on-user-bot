@@ -20,7 +20,7 @@ async def wiki(client, message):
 
         result = wikipedia.summary(user_request)
         await message.edit(
-            f"""<b>Слово:</b>
+            f"""<b>РЎР»РѕРІРѕ:</b>
 <code>{user_request}</code>
 
 <b>Info:</b>

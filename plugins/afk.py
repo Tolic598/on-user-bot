@@ -21,7 +21,7 @@ async def afk_handler(_, message: types.Message):
     end = datetime.datetime.now().replace(microsecond=0)
     afk_time = end - afk_info["start"]
     await message.reply_text(
-        f"? This user <b>AFK</b>.\n?? Причина:</b> <i>{afk_info['reason']}</i>\n<b>? Продолжительность:</b> {afk_time}"
+        f"вќ• This user <b>AFK</b>.\nрџ’¬ Reason:</b> <i>{afk_info['reason']}</i>\n<b>вЏі Duration:</b> {afk_time}"
     )
 
 
@@ -36,7 +36,7 @@ async def afk(_, message):
     afk_info["is_afk"] = True
     afk_info["reason"] = reason
 
-    await message.edit(f"? я иду <b>AFK</b>.\n<b>?? Причина:</b> <i>{reason}</i>.")
+    await message.edit(f"вќ• I'm going <b>AFK</b>.\n<b>рџ’¬ Reason:</b> <i>{reason}</i>.")
 
 
 @Client.on_message(filters.command("unafk", prefix) & filters.me)
@@ -44,10 +44,10 @@ async def unafk(_, message):
     if afk_info["is_afk"]:
         end = datetime.datetime.now().replace(microsecond=0)
         afk_time = end - afk_info["start"]
-        await message.edit(f"<b>? я не <b>AFK</b> больше.\n" f"? Я был <b>AFK:</b> {afk_time}")
+        await message.edit(f"<b>вќ• I'm not <b>AFK</b> anymore.\n" f"вЏі I was <b>AFK:</b> {afk_time}")
         afk_info["is_afk"] = False
     else:
-        await message.edit("<b>? ты не был афк</b>")
+        await message.edit("<b>вќЊ You weren't afk</b>")
 
 
 module_list['AFK'] = f'{prefix}afk | {prefix}unafk'

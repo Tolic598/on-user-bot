@@ -9,7 +9,7 @@ username_dem = "KlounsBot"
 
 @Client.on_message(filters.command("dem", prefixes=prefix) & filters.me)
 async def demotivator(client, message):
-    await message.edit("Создание демотиватора..")
+    await message.edit("Creating demotivator..")
     if message.reply_to_message.photo:
         await client.unblock_user(username_dem)
         capt = message.text.split(prefix + "dem ", maxsplit=1)[1]
@@ -31,7 +31,7 @@ async def demotivator(client, message):
                 await message.edit(f)
                 await asyncio.sleep(2)
     else:
-        await message.edit("Пожалуйста, ответьте на фото")
+        await message.edit("Please, reply to photo")
 
 
 module_list['Demotivator'] = f'{prefix}dem [reply to photo]'

@@ -1,3 +1,7 @@
+# By AmokDev
+# Refactor and optimising A9FM
+# https://github.com/AmokDEV/lordnet/blob/main/modules/hearts.py
+
 from pyrogram import Client, filters
 from plugins.settings.main_settings import module_list, file_list
 from pyrogram.errors.exceptions.flood_420 import FloodWait
@@ -8,8 +12,8 @@ from prefix import my_prefix
 prefix = my_prefix()
 
 
-R = "??"
-W = "??"
+R = "вќ¤пёЏ"
+W = "рџ¤Ќ"
 
 heart_list = [
     W * 9,
@@ -28,7 +32,7 @@ SLEEP = 0.1
 
 
 async def _wrap_edit(message, text: str):
-    """Защищенная от флуда служебная оболочка для редактирования"""
+    """Floodwait-safe utility wrapper for edit"""
     try:
         await message.edit(text)
     except FloodWait as fl:
@@ -36,8 +40,8 @@ async def _wrap_edit(message, text: str):
 
 
 async def phase1(message):
-    """Большой свиток"""
-    BIG_SCROLL = "??????????????"
+    """Big scroll"""
+    BIG_SCROLL = "рџ§Ўрџ’›рџ’љрџ’™рџ’њрџ–¤рџ¤Ћ"
     await _wrap_edit(message, joined_heart)
     for heart in BIG_SCROLL:
         await _wrap_edit(message, joined_heart.replace(R, heart))
@@ -46,7 +50,7 @@ async def phase1(message):
 
 async def phase2(message):
     """Per-heart randomiser"""
-    ALL = ["??"] + list("??????????????")
+    ALL = ["вќ¤пёЏ"] + list("рџ§Ўрџ’›рџ’љрџ’™рџ’њрџ¤Ћрџ–¤")  # don't include white heart
 
     format_heart = joined_heart.replace(R, "{}")
     for _ in range(5):
@@ -56,7 +60,7 @@ async def phase2(message):
 
 
 async def phase3(message):
-    """Заполнить сердечную матрицу"""
+    """Fill up heartlet matrix"""
     await _wrap_edit(message, joined_heart)
     await asyncio.sleep(SLEEP * 2)
     repl = joined_heart
@@ -67,7 +71,7 @@ async def phase3(message):
 
 
 async def phase4(message):
-    """Матрица сжимается"""
+    """Matrix shrinking"""
     for i in range(7, 0, -1):
         heart_matrix = "\n".join([R * i] * i)
         await _wrap_edit(message, heart_matrix)
@@ -82,13 +86,13 @@ async def hearts(client, message):
     await phase4(message)
     await asyncio.sleep(SLEEP * 3)
 
-    await message.edit("**?? I**")
+    await message.edit("**вќ¤пёЏ I**")
     await asyncio.sleep(0.5)
-    await message.edit("**?? I love**")
+    await message.edit("**вќ¤пёЏ I love**")
     await asyncio.sleep(0.5)
-    await message.edit("**?? I love you**")
+    await message.edit("**вќ¤пёЏ I love you**")
     await asyncio.sleep(3)
-    await message.edit("**?? I love you <3**")
+    await message.edit("**вќ¤пёЏ I love you <3**")
 
 
 module_list['Hearts'] = f'{prefix}love'

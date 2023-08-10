@@ -11,7 +11,7 @@ async def types(client, message):
     orig_text = message.text.split(prefix + "type ", maxsplit=1)[1]
     text = orig_text
     tbp = ""
-    typing_symbol = "-"
+    typing_symbol = "▒"
     while tbp != orig_text:
         await message.edit(str(tbp + typing_symbol))
         await asyncio.sleep(0.10)

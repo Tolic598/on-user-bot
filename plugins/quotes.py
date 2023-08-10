@@ -13,7 +13,7 @@ async def quotly(client, message):
         return
 
     await client.unblock_user("QuotLyBot")
-    await message.edit("Создаю цитату... подождите...")
+    await message.edit("Create quotes... wait...")
     await message.reply_to_message.forward("QuotLyBot")
 
     is_sticker = False

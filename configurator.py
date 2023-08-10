@@ -32,5 +32,5 @@ def my_api():
         api_id = config_id
         api_hash = config_hash
         device_model = config_model
-        print(f"Not found config.ini\nGenerating new...")
+        print(f"config.ini не найден\nСоздание нового...")
     return api_id, api_hash, device_model

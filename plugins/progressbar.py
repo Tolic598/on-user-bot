@@ -16,7 +16,7 @@ async def progressbar(client, message):
         percent = 100.0 * i / total
         time.sleep(0.1)
         await message.edit(
-            text + "\n[{:{}}] {:>3}%".format("-" * int(percent / (100.0 / bar_length)), bar_length, int(percent)))
+            text + "\n[{:{}}] {:>3}%".format("█" * int(percent / (100.0 / bar_length)), bar_length, int(percent)))
 
 module_list['Progressbar'] = f'{prefix}progressbar [Text]'
 file_list['Progressbar'] = 'progressbar.py'

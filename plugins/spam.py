@@ -24,7 +24,7 @@ async def sticker_spam(client, message):
 @Client.on_message(filters.command("spam", prefixes=prefix) & filters.me)
 async def spam(client, message):
     if not message.text.split(prefix + "spam", maxsplit=1)[1]:
-        await message.edit("<i>Ошибка</i>")
+        await message.edit("<i>Error</i>")
         return
     count = message.command[1]
     text = " ".join(message.command[3:])
